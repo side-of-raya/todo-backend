@@ -1,7 +1,18 @@
-create database todoapp;
+This is backend for todoapp on node.js with sequelize and postgresql database. Run this first if you want the app work correct.
+1. git clone https://github.com/side-of-raya/todo-backend
+2. npm install
+3. nodemon app.js
 
-create user lion;
-alter user lion with superuser;
+You also need to create your own .env file, you can even rename .example.env to .env and use it (UNSAFE).
+Database creation script written below
+
+
+create database todo;
+
+create user okroshka;
+alter user okroshka with superuser;
+
+\c todo
 
 create table users(
 id serial primary key,
@@ -16,11 +27,5 @@ value text not null,
 is_checked boolean default false
 );
 
-insert into users (name, email, password) values ('tasha', 'med@kakao.love', 1);
-insert into todos (user_id, value, is_checked) values (1, 'and somth', false);
-insert into users (name, email, password) values ('rina', 'e@m.a', 3);
-insert into todos (user_id, value, is_checked) values (3, 'WOHOOOOOO', false);
-
-
-alter database todoapp  owner to lion;
-alter user lion with password 'lionize';
+alter database todo  owner to okroshka;
+alter user okroshka with password 'kek';
