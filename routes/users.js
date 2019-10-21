@@ -7,11 +7,7 @@ const router = express.Router();
 
 router.post('/users', async (req, res) => {
   try {
-    users.create({
-      name: req.body.name,
-      email: req.body.email,
-      password: await bcrypt.hash(req.body.password, 8),
-    });
+    users.signUp(req, res)
   } catch (error) {
     console.log(error);
     res.sendStatus(400);
@@ -20,36 +16,17 @@ router.post('/users', async (req, res) => {
 
 router.post('/users/login', async (req, res) => {
   try {
-    const { email } = req.body;
-    const { password } = req.body;
+    const { email, password } = req.body;
     const user = await users.findByCredentials(email, password);
+    console.log(user)
     if (!user) {
-      return res.sendStatus(401);
+      return res.sendStatus(403);
     }
     const token = await users.generateAuthToken(user);
     users.findOne({ where: { email } })
-      .then((item) => {
-        item.update({
-          token,
-        });
-      });
     res.send({ authorization: token });
   } catch (error) {
-    res.status(400).send(error);
-  }
-});
-
-router.post('/users/logout', auth, async (req, res) => {
-  try {
-    const { token } = req.headers;
-    await users.findOne({ where: { token } })
-      .then((item) => {
-        item.update({
-          token: '',
-        });
-      });
-  } catch (error) {
-    res.status(400).send(error);
+    res.status(400);
   }
 });
 
