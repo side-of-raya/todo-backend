@@ -20,60 +20,45 @@ const users = db.define('users', {
   password: {
     type: DataTypes.TEXT,
   },
-  token: {
-    type: DataTypes.STRING,
-  },
 });
 
 users.signUp = async function(req, res) {
   try {
+    const user = await users.findOne({
+      where: {
+        email: req.body.email
+      }
+    })
+    if (user) return res.sendStatus(403)
     users.create({
       name: req.body.name,
       email: req.body.email,
       password: await bcrypt.hash(req.body.password, 8),
-    });
+    }).then(
+      res.sendStatus(200)
+    )
   } catch (error) {
     console.log(error);
-    res.sendStatus(409);
+    res.sendStatus(400);
   }
 };
 
-users.generateAuthToken = async function(user) {
+users.generateAuthToken = function(user) {
   const token = jwt.sign({ id: user.id }, process.env.KEY);
-  await users.findOne({ where: { id: user.id } })
-    .then( item => {
-      item.update({
-        token,
-      });
-    });
   return token;
-};
-
-users.findID = async function(token) {
-  try {
-    return await users.findOne({
-      where: {
-        token,
-      },
-    });
-  } catch (error) {
-    console.log(error);
-  }
 };
 
 users.findByCredentials = async (email, password) => {
   try {
     const user = await users.findOne({ where: { email } });
-    if (!user) {
-      throw new Error({ error: 'Invalid login credentials' });
-    }
     const isPasswordMatch = await bcrypt.compare(password, user.password);
-    if (!isPasswordMatch) {
-      throw new Error({ error: 'Invalid login credentials' });        
+    if (!user || !isPasswordMatch) {
+      res.status(403).send('wrong login or pass');
     }
     return user;
   } catch (error) {
     console.log(error);
+    res.status(404).send('smth s went wrong')
   }
 };
 
