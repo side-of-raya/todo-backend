@@ -17,6 +17,7 @@
     "express": "^4.17.1",
     "install": "^0.13.0",
     "jsonwebtoken": "^8.5.1",
+    "klaw-sync": "^6.0.0",
     "nodemon": "^1.19.3",
     "path": "^0.12.7",
     "pg": "^7.12.1",
