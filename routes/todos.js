@@ -1,75 +1,81 @@
 const express = require('express');
-const todos = require('../models/todos');
 const auth = require('../middleware/auth');
-const users = require('../models/users');
-const jwt = require('jsonwebtoken');
 
 const router = express.Router();
-
+let count = 0;
 router.get('/todos', auth, async (req, res) => {
   try {
-    const token = req.headers.authorization;
-    const data = jwt.verify(token, process.env.KEY);
-    todos.findAll({
+    count++;
+    console.log(count);
+    const models = res.app.get('models');
+    const user = res.locals.user;
+    const items = await models.todos.findAll({
       where: {
-        user_id: data.id,
+        user_id: user.id,
       },
       order: ['id']
-    }).then((items) => {
-      res.send(items);
-    });
+    })
+    res.status(201).send(items);
   } catch (error) {
     console.log(error);
     res.sendStatus(404);
   }
 });
 
-router.post('/todos', auth, async (req, res) => {
+router.post('/todo', auth, async (req, res) => {
   try {
-    const token = req.headers.authorization;
-    const data = jwt.verify(token, process.env.KEY);
-    const user = await users.findOne({ id: data.id });;
-    todos.create({
+    const models = res.app.get('models');
+    const user = res.locals.user;
+    const response = await models.todos.create({
       user_id: user.id,
       value: req.body.value,
-    });
-    res.sendStatus(200);
-  } catch (error) { console.log(error); }
+    })
+    console.log(response);
+    res.status(201).send(response.dataValues)    
+  } catch (error) {
+    console.log(error);
+  }
 });
 
-router.patch('/todos', auth, (req, res) => {
-  todos.findOne({ where: { id: req.body.id } })
-    .then((item) => {
-      const { args } = req.body;
-      item.update(args.value);
-      res.sendStatus(200);
-    });
+router.patch('/todo', auth, async (req, res) => {
+  try{
+    const models = res.app.get('models');
+    const item = await models.todos.findOne({ where: { id: req.body.id } })
+    const { args } = req.body;
+    console.log(args)
+    await item.update(args);
+    res.status(201).send(item);
+  } catch (error) {
+    console.log(error)
+  }
 });
 
 router.delete('/todo/:id', auth, async (req, res) => {
-  const token = req.headers.authorization;
-  const data = jwt.verify(token, process.env.KEY);
-  const user = await users.findOne({ id: data.id });
-  todos.destroy({
-    where: {
-      user_id: user.id,
-      id: req.params.id,
-    },
-  })
-    .then(res.sendStatus(200));
+  try{
+    const models = res.app.get('models');
+    const user = res.locals.user;
+    await models.todos.destroy({
+      where: {
+        user_id: user.id,
+        id: req.params.id,
+      },
+    })
+    res.status(204).send('Deleted successfully')
+  } catch (error) {
+    console.log(error)
+  }
 });
 
 router.delete('/todos', auth, async (req, res) => {
-  const token = req.headers.authorization;
-  const data = jwt.verify(token, process.env.KEY);
-  const user = await users.findOne({ id: data.id });
-  todos.destroy({
+  const models = res.app.get('models');
+  const user = res.locals.user;
+  await models.todos.destroy({
     where: {
       user_id: user.id,
       is_checked: true,
     },
   })
-    .then(res.sendStatus(200));
+  res.status(204).send('Deleted successfully');
 });
 
 module.exports = router;
