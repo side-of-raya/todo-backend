@@ -19,6 +19,9 @@ module.exports = (Sequelize, DataTypes) => {
     password: {
       type: DataTypes.TEXT,
     },
+  },
+  {
+    timestamps: false
   });
 
   users.signUp = async function(req, res) {
@@ -32,9 +35,9 @@ module.exports = (Sequelize, DataTypes) => {
       await users.create({
         name: req.body.name,
         email: req.body.email,
-        password: bcrypt.hash(req.body.password, 8),
+        password: await bcrypt.hash(req.body.password, 8),
       })
-      res.status(200).send(result)
+      res.status(200).send;
     } catch (error) {
       console.log(error);
       res.sendStatus(400);
@@ -46,12 +49,13 @@ module.exports = (Sequelize, DataTypes) => {
     return token;
   };
 
-  users.findByCredentials = async (email, password) => {
+  users.findByCredentials = async (res, email, password) => {
     try {
-      const user = await users.findOne({ where: { email } });
+      const models = res.app.get('models')
+      const user = await models.users.findOne({ where: { email } });
       const isPasswordMatch = await bcrypt.compare(password, user.password);
       if (!user || !isPasswordMatch) {
-        res.status(403).send('wrong login or pass');
+        res.status(401).send('Wrong login or pass');
       }
       return user;
     } catch (error) {

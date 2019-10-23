@@ -14,10 +14,9 @@ router.post('/users/login', async (req, res) => {
   try {
     const { email, password } = req.body;
     const models = res.app.get('models');
-    const user = await models.users.findByCredentials(email, password);
-    console.log(user)
+    const user = await models.users.findByCredentials(res, email, password);
     if (!user) {
-      return res.sendStatus(403);
+      return res.sendStatus(401);
     }
     const token = await models.users.generateAuthToken(user);
     models.users.findOne({ where: { email } })

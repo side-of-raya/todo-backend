@@ -15,7 +15,10 @@ module.exports = (Sequelize, DataTypes) => {
     is_checked: {
       type: DataTypes.BOOLEAN,
       default: false,
-    },
+    },    
+  },
+  {
+    timestamps: false
   });
   return todos;
 }
