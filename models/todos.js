@@ -15,7 +15,11 @@ module.exports = (Sequelize, DataTypes) => {
     is_checked: {
       type: DataTypes.BOOLEAN,
       default: false,
-    },    
+    },
+    queue_number: {
+      type: DataTypes.INTEGER,
+      //autoIncrement: true,
+    }
   },
   {
     timestamps: false

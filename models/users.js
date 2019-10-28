@@ -37,7 +37,7 @@ module.exports = (Sequelize, DataTypes) => {
         email: req.body.email,
         password: await bcrypt.hash(req.body.password, 8),
       })
-      res.status(200).send;
+      res.status(200).send("Welcome!");
     } catch (error) {
       console.log(error);
       res.sendStatus(400);
