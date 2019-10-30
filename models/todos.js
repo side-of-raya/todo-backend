@@ -8,6 +8,10 @@ module.exports = (Sequelize, DataTypes) => {
     },
     user_id: {
       type: DataTypes.INTEGER,
+      references: {
+        model: 'users',
+        key: 'id'
+      }
     },
     value: {    
       type: DataTypes.STRING,
@@ -15,7 +19,10 @@ module.exports = (Sequelize, DataTypes) => {
     is_checked: {
       type: DataTypes.BOOLEAN,
       default: false,
-    },    
+    },
+    queue_number: {
+      type: DataTypes.INTEGER,
+    }
   },
   {
     timestamps: false

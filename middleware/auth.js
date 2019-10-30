@@ -6,16 +6,18 @@ const auth = async (req, res, next) => {
     const models = res.app.get('models');
     const token = req.headers.authorization;
     const data = jwt.verify(token, process.env.KEY);
-    const user = await models.users.findOne({ id: data.id });
-    if (!user) {
-      res.sendStatus(403);
+    const user = await models.users.findOne({ where: {id: data.id }});
+    console.log(user.id)
+    if (!user || !user.isActive) {
+      console.log(user, user.isActive)
+      res.sendStatus(401);
       return;
     }
     res.locals.user = user;
     next();
   } catch (error) {
     console.log(error);
-    res.status(403).send("Invalid token.");
+    res.status(401).send("Invalid token");
   }
 };
 

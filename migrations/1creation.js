@@ -10,15 +10,15 @@ module.exports = {
           allowNull: false,
           onDelete: "CASCADE",
         },
-        name: {
-          type: DataTypes.CHAR(20),
-        },
-        email: {
-          type: DataTypes.CHAR(30),
-        },
-        password: {
-          type: DataTypes.TEXT,
-        },
+      name: {
+        type: DataTypes.CHAR(20),
+      },
+      email: {
+        type: DataTypes.CHAR(30),
+      },
+      password: {
+        type: DataTypes.TEXT,
+      },
     });
     await Sequelize.createTable('todos', {
       id: {
@@ -27,20 +27,20 @@ module.exports = {
           primaryKey: true,
           allowNull: false,
         },
-        user_id: {
-          type: DataTypes.INTEGER,
-          references: {
-            model: 'users',
-            key: 'id'
-          }
-        },
-        value: {    
-          type: DataTypes.STRING,
-        },
-        is_checked: {
-          type: DataTypes.BOOLEAN,
-          default: false,
-        },
+      user_id: {
+        type: DataTypes.INTEGER,
+        references: {
+          model: 'users',
+          key: 'id'
+        }
+      },
+      value: {    
+        type: DataTypes.STRING,
+      },
+      is_checked: {
+        type: DataTypes.BOOLEAN,
+        default: false,
+      },
     });
   },
 };
