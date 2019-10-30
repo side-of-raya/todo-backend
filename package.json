@@ -14,11 +14,12 @@
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "dotenv": "^8.1.0",
+    "eslint-config-airbnb": "^18.0.1",
     "express": "^4.17.1",
     "install": "^0.13.0",
     "jsonwebtoken": "^8.5.1",
     "klaw-sync": "^6.0.0",
-    "nodemon": "^1.19.3",
+    "nodemailer": "^6.3.1",
     "path": "^0.12.7",
     "pg": "^7.12.1",
     "pg-hstore": "^2.3.3",
@@ -28,7 +29,7 @@
     "sequelize-cli": "^5.5.1"
   },
   "devDependencies": {
-    "nodemon": "^1.19.3",
+    "nodemon": "^1.19.4",
     "sequelize-cli": "^5.5.1",
     "ws": "3.3.2"
   }
