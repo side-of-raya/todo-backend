@@ -8,6 +8,10 @@ module.exports = (Sequelize, DataTypes) => {
     },
     user_id: {
       type: DataTypes.INTEGER,
+      references: {
+        model: 'users',
+        key: 'id'
+      }
     },
     value: {    
       type: DataTypes.STRING,
@@ -18,7 +22,6 @@ module.exports = (Sequelize, DataTypes) => {
     },
     queue_number: {
       type: DataTypes.INTEGER,
-      //autoIncrement: true,
     }
   },
   {
