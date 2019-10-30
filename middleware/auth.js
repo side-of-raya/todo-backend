@@ -5,13 +5,11 @@ const auth = async (req, res, next) => {
   try {
     const models = res.app.get('models');
     const token = req.headers.authorization;
-    if (!token) {
-      res.status(403).send("Invalid token");
-      return;
-    }
     const data = jwt.verify(token, process.env.KEY);
-    const user = await models.users.findOne({ id: data.id });
-    if (!user) {
+    const user = await models.users.findOne({ where: {id: data.id }});
+    console.log(user.id)
+    if (!user || !user.isActive) {
+      console.log(user, user.isActive)
       res.sendStatus(401);
       return;
     }
@@ -19,7 +17,7 @@ const auth = async (req, res, next) => {
     next();
   } catch (error) {
     console.log(error);
-    res.status(500).send("oops, smth s went wrong");
+    res.status(401).send("Invalid token");
   }
 };
 
